@@ -1,0 +1,99 @@
+import Vapor
+import FluentProvider
+import HTTP
+
+final class _CLASS_NAME_: Model {
+    let storage = Storage()
+    
+    fileprivate static let tableName = "_DB_TABLE_NAME_"
+    
+    var id: Node?
+    _IVARS_DEFINITION_
+    
+    struct Keys {
+        _KEYS_DEFINITION_
+    }
+
+//    init(node: Node, in context: Context) throws {
+//        id = try node.extract("id")
+//        _IVARS_INITIALIZER_
+//    }
+    
+//    func makeNode(context: Context) throws -> Node {
+//        return try Node(node: [
+//            "id": id,
+//            _IVARS_DICTIONARY_PAIRS_
+//        ])
+//    }
+
+    init(_DEFAULT_INIT_PARAMS_) {
+        _DEFAULT_INIT_IMPLEMENTATION_
+    }
+    // MARK: Fluent Serialization
+    /// Initializes the _CLASS_NAME_ from the
+    /// database row
+    init(row: Row) throws {
+        _FLUENT_INITIALIZER_
+    }
+
+    // Serializes the _CLASS_NAME_ to the database
+    func makeRow() throws -> Row {
+        var row = Row()
+        _FLUENT_SERIALIZE_
+        return row
+    }
+    
+}
+
+extension _CLASS_NAME_: Preparation {
+    static func prepare(_ database: Database) throws {
+        try database.create(self) {
+            $0.id()
+            _TABLE_ROWS_DEFINITION_
+        }
+    }
+    
+    static func revert(_ database: Database) throws {
+        try database.delete(self)
+    }
+}
+
+// MARK: JSON
+extension _CLASS_NAME_: JSONConvertible {
+    convenience init(json: JSON) throws {
+        self.init(
+            _CLASS_JSON_INIT_
+        )
+    }
+    
+    func makeJSON() throws -> JSON {
+        var json = JSON()
+        _CLASS_TO_JSON_
+        return json
+    }
+}
+
+
+// MARK: HTTP
+
+// This allows _CLASS_NAME_ models to be returned
+// directly in route closures
+extension _CLASS_NAME_: ResponseRepresentable { }
+
+// MARK: Update
+
+// This allows the _CLASS_NAME_ model to be updated
+// dynamically by the request.
+//extension _CLASS_NAME_: Updateable {
+//    // Updateable keys are called when `post.update(for: req)` is called.
+//    // Add as many updateable keys as you like here.
+//    public static var updateableKeys: [UpdateableKey<_CLASS_NAME_>] {
+//        return [
+//            // If the request contains a String at key "content"
+//            // the setter callback will be called.
+//            UpdateableKey(_CLASS_NAME_.Keys.key, String.self) { obj, content in
+//                obj.key = content
+//            }
+//        ]
+//    }
+//}

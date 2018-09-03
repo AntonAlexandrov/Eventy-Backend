@@ -1,0 +1,45 @@
+# nginx will server the web app
+proxy:
+  ports:
+    - "80:80"
+    - "443:443"
+  image: jwilder/nginx-proxy:latest
+  volumes:
+    - "/var/run/docker.sock:/tmp/docker.sock"
+  environment: 
+    - DEFAULT_HOST=eventy.local
+# a postgres container, which will store the data on the host
+db:
+  restart: on-failure
+  image: postgres:9.4
+  volumes:
+    - ./database:/var/lib/postgresql
+  environment:
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=Eventy123
+    - POSTGRES_DB=eventy
+  expose:
+    - "5432"
+# create container which uses the vapor Docker image
+app:
+  build: 
+    context: ./vapor
+    dockerfile: Dockerfile-vapor-app
+  image: vapor-app:latest
+  container_name: vapor-app
+# web is the container which hosts the app based on vapor image
+web:
+  build: ./vapor
+  restart: on-failure
+  volumes:
+    - ./app:/app
+  environment:
+    - VIRTUAL_HOST=eventy.local
+    - PORT=8080
+  expose:
+    - "8080"
+  depends_on:
+    - app
+    - db
+  links:
+    - db

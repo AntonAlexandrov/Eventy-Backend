@@ -1,0 +1,18 @@
+extension Droplet {
+    func pathFor_ROUTECAPITALIZED_() -> String {
+        return "_ROUTE_"
+    }
+    
+    func path(for model: _RESOURCE_) throws -> String {
+        guard let id = model.id?.int else { throw Abort.badRequest }
+        return pathFor_ROUTECAPITALIZED_() + "/\(id)"
+    }
+    
+    func pathForCreating_ROUTECAPITALIZED_() -> String {
+        return pathFor_ROUTECAPITALIZED_() + "/new"
+    }
+    
+    func path(forEditing model: _RESOURCE_) throws -> String {
+        return try path(for: model) + "/edit"
+    }
+}
